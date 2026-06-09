@@ -3,3 +3,6 @@ __pycache__/
 *.pyc 
 .env 
 media/ 
+db.sqlite3
+.DS_Store
+db.sqlite3
