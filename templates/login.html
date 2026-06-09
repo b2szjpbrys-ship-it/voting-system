@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Login — Voting App{% endblock %}
+{% block content %}
+<section class="container py-6">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="login-card p-5 rounded-4 shadow-sm bg-white">
+        <h2 class="mb-3">Sign in to vote</h2>
+        <p class="text-muted">Enter your name and phone number to create your voter profile. After signing in, you will return to the home page.</p>
+        <div id="loginAlert" class="alert alert-danger visually-hidden"></div>
+        <form id="loginForm" class="mt-4">
+          <div class="mb-3">
+            <label class="form-label">Full name</label>
+            <input id="loginName" type="text" class="form-control" placeholder="Jane Doe" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone number</label>
+            <input id="loginPhone" type="tel" class="form-control" placeholder="+255712345678" required>
+            <div class="form-text">Phone must start with +255 and be a valid Tanzania number.</div>
+          </div>
+          <button class="btn btn-primary w-100">Continue</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block page_js %}
+<script>window.pageInit && window.pageInit('login')</script>
+{% endblock %}

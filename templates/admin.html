@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+
+    <label>Admin Key: <input id="adminKey" type="text" placeholder="adminsecret"></label>
+
+    <section>
+      <h2>Positions</h2>
+      <form id="posForm">
+        <input id="positionName" placeholder="Position name">
+        <button type="submit">Add Position</button>
+      </form>
+      <ul id="positionsList"></ul>
+    </section>
+
+    <section>
+      <h2>Candidates</h2>
+      <form id="candidateForm">
+        <input id="candidateName" placeholder="Candidate name">
+        <select id="candidatePosition"></select>
+        <input id="candidateImage" type="file" accept="image/*">
+        <button type="submit">Add Candidate</button>
+      </form>
+      <ul id="candidatesList"></ul>
+    </section>
+
+    <section>
+      <h2>Users</h2>
+      <button id="loadUsers">Load users</button>
+      <ul id="usersList"></ul>
+    </section>
+
+    <section>
+      <h2>Actions</h2>
+      <button id="getWinners">Show Winners</button>
+      <pre id="winners"></pre>
+      <button id="resetElection">Reset Election</button>
+    </section>
+
+  </div>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

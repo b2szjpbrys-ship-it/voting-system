@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Vote — Voting App{% endblock %}
+{% block content %}
+<section class="container py-6">
+  <div class="d-flex flex-column flex-lg-row gap-4 align-items-start">
+    <div class="flex-grow-1">
+      <div class="page-panel p-4 rounded-4 shadow-sm mb-4">
+        <h2 class="mb-2">Vote for your favorites</h2>
+        <p class="text-muted">Select one candidate for each position. Your identity is preserved during the voting flow.</p>
+        <p class="text-muted mb-0"><strong>Note:</strong> You can update your vote within 30 minutes of casting it. After 30 minutes, the vote becomes final.</p>
+      </div>
+      <div id="voteAlert"></div>
+      <div id="positions" class="vote-list"></div>
+    </div>
+    <aside class="info-panel p-4 rounded-4 shadow-sm bg-white">
+      <h5>Your voting profile</h5>
+      <div id="voteProfile" class="text-muted mt-3">Loading voter status…</div>
+      <div class="mt-4">
+        <a class="btn btn-outline-primary w-100" href="/login/">Edit profile</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+{% block page_js %}
+<script>window.pageInit && window.pageInit('vote')</script>
+{% endblock %}

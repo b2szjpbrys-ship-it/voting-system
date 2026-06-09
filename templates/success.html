@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Vote Complete — Voting App{% endblock %}
+{% block content %}
+<section class="success-section text-center py-7 text-white">
+  <div class="container">
+    <div class="success-panel p-5 rounded-4 shadow-lg">
+      <h1 class="mb-3">Vote submitted</h1>
+      <p class="lead text-white-75 mb-4">Thank you for participating. Your vote has been recorded successfully.</p>
+      <p id="successNote" class="text-white-75 mb-4"></p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a class="btn btn-light btn-lg" href="/results/">View results</a>
+        <a class="btn btn-outline-light btn-lg" href="/vote/">Vote again</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block page_js %}
+<script>window.pageInit && window.pageInit('success')</script>
+{% endblock %}
