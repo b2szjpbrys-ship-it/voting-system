@@ -285,3 +285,228 @@ textarea {
 .vote-button {
   white-space: nowrap;
 }
+/* ================================
+   MODERN CHARCOAL + LIME THEME
+   For Admin Dashboard and Login
+================================ */
+
+/* Global page background */
+body {
+    background: #F3F4F6 !important;
+    color: #1F2937 !important;
+    font-family: Inter, Arial, sans-serif !important;
+}
+
+/* Main navbar / top area */
+.navbar,
+.admin-header,
+header,
+.topbar {
+    background: #1F2937 !important;
+    color: #ffffff !important;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 12px 30px rgba(31, 41, 55, 0.18);
+}
+
+/* Brand/title text */
+.navbar-brand,
+.admin-title,
+h1,
+h2,
+h3 {
+    color: #1F2937;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+/* White cards */
+.card,
+.admin-card,
+.login-card,
+.form-card,
+.position-card,
+.candidate-card,
+.result-card,
+section,
+.container-box {
+    background: #ffffff !important;
+    border: 1px solid rgba(31, 41, 55, 0.08) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 45px rgba(31, 41, 55, 0.10) !important;
+}
+
+/* Dashboard dark overview-like blocks */
+.dashboard-summary,
+.summary-card,
+.stats-card,
+.overview-card {
+    background: #1F2937 !important;
+    color: #ffffff !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 45px rgba(31, 41, 55, 0.25) !important;
+}
+
+/* Lime highlights */
+.text-primary,
+.text-success,
+.highlight,
+.brand-accent {
+    color: #A3E635 !important;
+}
+
+/* Buttons */
+.btn-primary,
+button[type="submit"],
+.vote-button,
+.admin button,
+.login button {
+    background: #A3E635 !important;
+    color: #1F2937 !important;
+    border: none !important;
+    border-radius: 14px !important;
+    font-weight: 700 !important;
+    padding: 10px 18px !important;
+    box-shadow: 0 10px 22px rgba(163, 230, 53, 0.28) !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover,
+.vote-button:hover,
+.admin button:hover,
+.login button:hover {
+    transform: translateY(-2px);
+    background: #8FD92E !important;
+    color: #1F2937 !important;
+}
+
+/* Secondary buttons */
+.btn-outline-light,
+.btn-secondary,
+button.delete {
+    border-radius: 14px !important;
+    font-weight: 700 !important;
+}
+
+/* Forms */
+input,
+select,
+textarea {
+    background: #F3F4F6 !important;
+    border: 1px solid rgba(31, 41, 55, 0.12) !important;
+    border-radius: 14px !important;
+    padding: 12px 14px !important;
+    color: #1F2937 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #A3E635 !important;
+    box-shadow: 0 0 0 4px rgba(163, 230, 53, 0.22) !important;
+    outline: none !important;
+}
+
+/* Login page center look */
+.login-container,
+.login-card,
+#loginForm {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Admin lists */
+ul,
+.list-group {
+    border-radius: 18px;
+}
+
+li,
+.list-group-item {
+    background: #ffffff !important;
+    border: 1px solid rgba(31, 41, 55, 0.08) !important;
+    border-radius: 14px !important;
+    margin-bottom: 10px !important;
+    padding: 14px 16px !important;
+}
+
+/* Tables */
+table {
+    background: #ffffff !important;
+    border-radius: 18px !important;
+    overflow: hidden;
+}
+
+th {
+    background: #1F2937 !important;
+    color: #ffffff !important;
+}
+
+td {
+    color: #1F2937 !important;
+}
+
+/* Candidate images */
+img,
+.candidate-photo,
+.result-photo {
+    border-radius: 18px !important;
+    object-fit: cover !important;
+}
+
+/* Soft gray sections */
+.hero,
+.main-section,
+.content-wrapper,
+.admin-wrapper {
+    background: #F3F4F6 !important;
+}
+
+/* Small labels */
+.badge,
+.position-label {
+    background: rgba(163, 230, 53, 0.18) !important;
+    color: #1F2937 !important;
+    border-radius: 999px !important;
+    font-weight: 700 !important;
+    padding: 8px 14px !important;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 18px !important;
+    border: none !important;
+}
+
+.alert-info,
+.alert-success {
+    background: rgba(163, 230, 53, 0.18) !important;
+    color: #1F2937 !important;
+}
+
+.alert-warning {
+    background: #fff7d6 !important;
+    color: #1F2937 !important;
+}
+
+.alert-danger {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+}
+
+/* Page spacing */
+.container,
+.container-fluid,
+main {
+    padding-top: 24px;
+    padding-bottom: 32px;
+}
+
+/* Modern dashboard feel */
+.admin-page,
+.login-page {
+    background:
+        radial-gradient(circle at top right, rgba(163, 230, 53, 0.18), transparent 28%),
+        #F3F4F6 !important;
+}
