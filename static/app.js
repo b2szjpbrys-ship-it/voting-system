@@ -1,5 +1,4 @@
-// Enhanced frontend JS with cached data, live polling, and voter profile handling
-// Enhanced frontend JS with cached data, live polling, and voter profile handling
+// Enhanced frontend JS with cached data, live polling, voter profile handling, and voter dashboard progress
 (function(){
   const API = '/api/';
   const cache = { positions: null, candidates: {}, results: null };
@@ -33,7 +32,7 @@
 
   function clearVoter(){
     localStorage.removeItem('voterProfile');
-    window.location.reload();
+    window.location.href = '/login/';
   }
 
   function formatTime(date){
@@ -46,6 +45,7 @@
 
   function formatDateTime(value){
     if(!value) return '';
+
     try {
       return new Intl.DateTimeFormat([], {
         year: 'numeric',
@@ -61,6 +61,7 @@
 
   function parseErrorMessage(error){
     if(!error || !error.message) return 'Request failed.';
+
     try {
       const data = JSON.parse(error.message);
       return data.detail || error.message;
@@ -77,7 +78,7 @@
 
     if(voter){
       el.innerHTML = `
-        <span class="text-white">Welcome, <strong>${voter.name}</strong></span>
+        <span>Welcome, <strong>${voter.name}</strong></span>
         <button class="btn btn-sm btn-outline-light btn-logout">Logout</button>
       `;
 
@@ -85,12 +86,16 @@
       if(btn) btn.addEventListener('click', clearVoter);
 
     } else {
-      el.textContent = 'Guest voter';
+      el.innerHTML = `
+        <span>Guest voter</span>
+        <a href="/login/" class="btn btn-sm btn-primary">Login</a>
+      `;
     }
   }
 
   function showAlert(element, message, type='danger'){
     if(!element) return;
+
     element.className = `alert alert-${type}`;
     element.textContent = message;
     element.classList.remove('visually-hidden');
@@ -128,6 +133,19 @@
 
     const data = await fetchJSON(API + `positions/${positionId}/candidates/`);
     setCached(`candidates-${positionId}`, data);
+
+    return data;
+  }
+
+  async function loadMyVotes(voter){
+    if(!voter || !voter.token) return null;
+
+    const data = await fetchJSON(API + 'results/', {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Token ' + voter.token
+      }
+    });
 
     return data;
   }
@@ -177,22 +195,42 @@
         container.appendChild(loginBanner);
       }
 
-      if(positions.length === 0){
+      if(!Array.isArray(positions) || positions.length === 0){
         container.innerHTML += '<p class="text-muted">No positions are available at this time.</p>';
         return;
+      }
+
+      let myVotedPositionIds = [];
+
+      if(voter && voter.token){
+        try {
+          const myVotes = await loadMyVotes(voter);
+
+          if(myVotes && Array.isArray(myVotes.votes)){
+            myVotedPositionIds = myVotes.votes.map(vote => vote.position_id);
+          }
+        } catch {
+          myVotedPositionIds = [];
+        }
       }
 
       for(const pos of positions){
         const section = document.createElement('section');
         section.className = 'position-card p-4 rounded-4 shadow-sm mb-4 bg-white';
 
+        const alreadyVotedForPosition = myVotedPositionIds.includes(pos.id);
+
         section.innerHTML = `
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
               <h5 class="mb-1">${pos.name}</h5>
-              <p class="text-muted mb-0">Choose one candidate</p>
+              <p class="text-muted mb-0">
+                ${alreadyVotedForPosition ? 'You have already voted for this position' : 'Choose one candidate'}
+              </p>
             </div>
-            <span class="position-label">${pos.name}</span>
+            <span class="position-label">
+              ${alreadyVotedForPosition ? 'Voted' : pos.name}
+            </span>
           </div>
           <div id="pos-${pos.id}" class="candidate-grid"></div>
         `;
@@ -203,7 +241,7 @@
           const candidates = await loadCandidates(pos.id);
           const list = section.querySelector(`#pos-${pos.id}`);
 
-          if(candidates.length === 0){
+          if(!Array.isArray(candidates) || candidates.length === 0){
             list.innerHTML = '<div class="text-muted">No candidates found.</div>';
           } else {
             candidates.forEach(c => {
@@ -220,7 +258,18 @@
                 : description;
 
               const needsReadMore = description.length > 120;
-              const voteLabel = voter ? 'Vote' : 'Sign in to vote';
+
+              let voteLabel = 'Vote';
+              let disabledAttr = '';
+
+              if(!voter){
+                voteLabel = 'Sign in to vote';
+              }
+
+              if(alreadyVotedForPosition){
+                voteLabel = 'Already Voted';
+                disabledAttr = 'disabled';
+              }
 
               card.innerHTML = `
                 ${image}
@@ -230,7 +279,7 @@
                       <strong>${c.name}</strong>
                       <div class="text-muted small mt-1">${c.position_name || pos.name}</div>
                     </div>
-                    <button class="btn btn-sm btn-primary vote-button">${voteLabel}</button>
+                    <button class="btn btn-sm btn-primary vote-button" ${disabledAttr}>${voteLabel}</button>
                   </div>
 
                   <p class="candidate-description">${shortDescription}</p>
@@ -239,9 +288,13 @@
                 </div>
               `;
 
-              card.querySelector('.vote-button').addEventListener('click', () => {
-                submitVote(pos.id, c.id);
-              });
+              const voteBtn = card.querySelector('.vote-button');
+
+              if(voteBtn && !alreadyVotedForPosition){
+                voteBtn.addEventListener('click', () => {
+                  submitVote(pos.id, c.id);
+                });
+              }
 
               if(needsReadMore){
                 card.querySelector('.read-more-btn').addEventListener('click', (event) => {
@@ -264,13 +317,13 @@
             });
           }
 
-        } catch (e) {
+        } catch {
           const list = section.querySelector(`#pos-${pos.id}`);
           list.innerHTML = '<div class="text-danger">Unable to load candidates.</div>';
         }
       }
 
-    } catch (error) {
+    } catch {
       container.innerHTML = '<div class="alert alert-danger">Unable to load positions at this time. Please refresh the page.</div>';
     }
   }
@@ -299,6 +352,11 @@
         },
         body: JSON.stringify(payload)
       });
+
+      cache.results = null;
+      cache.positions = null;
+      cacheTimestamps.results = null;
+      cacheTimestamps.positions = null;
 
       if(result && result.detail){
         localStorage.setItem('voteMessage', result.detail);
@@ -329,7 +387,6 @@
       return;
     }
 
-    // VOTER RESULT VIEW: show only votes made by the logged-in voter
     if(data.mode === 'my_votes'){
       const voterName = data.voter && data.voter.name ? data.voter.name : 'Voter';
       const voterPhone = data.voter && data.voter.phone ? data.voter.phone : '';
@@ -392,7 +449,6 @@
       return;
     }
 
-    // ADMIN RESULT VIEW: still support old full election result format
     if(data.mode === 'admin_results' || Array.isArray(data.positions)){
       if(!Array.isArray(data.positions) || data.positions.length === 0){
         container.innerHTML = '<p class="text-muted">No results are available yet.</p>';
@@ -485,12 +541,7 @@
         return;
       }
 
-      const data = await fetchJSON(API + 'results/', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Token ' + voter.token
-        }
-      });
+      const data = await loadMyVotes(voter);
 
       setCached('results', data);
       renderResultsData(data);
@@ -602,17 +653,75 @@
     });
   }
 
-  function initHome(){
+  async function initHome(){
     renderAuthStatus();
 
-    const greeting = document.querySelector('.hero-copy');
     const voter = getVoter();
 
-    if(greeting && voter){
-      const welcome = document.createElement('p');
-      welcome.className = 'hero-welcome text-white-75';
-      welcome.textContent = `Signed in as ${voter.name}. Ready to cast your vote?`;
-      greeting.appendChild(welcome);
+    const welcomeTitle = document.getElementById('dashboardWelcome');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressText = document.getElementById('progressText');
+    const progressMessage = document.getElementById('progressMessage');
+    const circle = document.getElementById('dashboardCircleProgress');
+
+    if(welcomeTitle && voter){
+      welcomeTitle.textContent = `Welcome, ${voter.name} 👋`;
+    }
+
+    if(!voter || !voter.token){
+      if(progressPercent) progressPercent.textContent = '0%';
+      if(progressText) progressText.textContent = '0 of 0';
+      if(progressMessage) progressMessage.textContent = 'Please login first to see your voting progress.';
+
+      if(circle){
+        circle.style.background = `
+          radial-gradient(circle at center, #ffffff 52%, transparent 53%),
+          conic-gradient(#00a6b3 0deg, #e5e7eb 0deg)
+        `;
+      }
+
+      return;
+    }
+
+    try {
+      const positions = await loadPositions();
+      const myVotes = await loadMyVotes(voter);
+
+      const totalPositions = Array.isArray(positions) ? positions.length : 0;
+      const votedPositions = myVotes && myVotes.total_my_votes ? myVotes.total_my_votes : 0;
+
+      const percent = totalPositions > 0
+        ? Math.round((votedPositions / totalPositions) * 100)
+        : 0;
+
+      const degrees = Math.round((percent / 100) * 360);
+
+      if(progressPercent) progressPercent.textContent = `${percent}%`;
+      if(progressText) progressText.textContent = `${votedPositions} of ${totalPositions}`;
+
+      if(progressMessage){
+        if(totalPositions === 0){
+          progressMessage.textContent = 'No voting positions are available yet.';
+        } else if(votedPositions === 0){
+          progressMessage.textContent = 'You haven’t voted for any position yet.';
+        } else if(votedPositions < totalPositions){
+          progressMessage.textContent = 'You have started voting. Continue until all positions are completed.';
+        } else {
+          progressMessage.textContent = 'You have completed voting for all positions.';
+        }
+      }
+
+      if(circle){
+        circle.style.background = `
+          radial-gradient(circle at center, #ffffff 52%, transparent 53%),
+          conic-gradient(#00a6b3 ${degrees}deg, #e5e7eb ${degrees}deg)
+        `;
+      }
+
+    } catch {
+      if(progressMessage){
+        progressMessage.textContent = 'Unable to load voting progress. Please refresh the page.';
+      }
     }
   }
 
