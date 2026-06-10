@@ -1,34 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JAGWA SPORTS | Vote</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'app.js' %}" defer></script>
+</head>
+<body>
+
 <div class="voter-layout">
-  <aside class="voter-sidebar">
-    <div class="brand-box">
-      <img src="/static/logo.png" alt="JAGWA SPORTS" class="brand-logo">
-      <h3>JAGWA<span>SPORTS</span></h3>
-    </div>
 
-    <nav class="voter-menu">
-      <a href="/">Dashboard</a>
-      <a href="/vote/" class="active">Vote</a>
-      <a href="/results/">My Votes</a>
-      <a href="/login/">My Profile</a>
-    </nav>
-  </aside>
+    <aside class="voter-sidebar">
+        <div class="brand-box">
+            <img src="{% static 'logo.png' %}" alt="JAGWA SPORTS" class="brand-logo">
+            <h3>JAGWA<span>SPORTS</span></h3>
+        </div>
 
-  <main class="voter-main">
-    <div class="voter-topbar">
-      <div>
-        <h1>Vote for Your Candidates</h1>
-        <p>Please select one candidate for each position.</p>
-      </div>
+        <nav class="voter-menu">
+            <a href="/">🏠 Dashboard</a>
+            <a href="/vote/" class="active">🗳️ Vote</a>
+            <a href="/results/">✅ My Votes</a>
+            <a href="/login/">👤 My Profile</a>
+            <a href="/login/">🚪 Logout</a>
+        </nav>
 
-      <div id="authStatus"></div>
-    </div>
+        <div class="vote-note">
+            <strong>Your Vote is Important</strong>
+            <p>You can vote once for each position. Make your choices count.</p>
+        </div>
+    </aside>
 
-    <div id="voteAlert" class="alert visually-hidden"></div>
+    <main class="voter-main">
 
-    <section id="positions"></section>
-  </main>
+        <div class="voter-topbar">
+            <div>
+                <h1>Vote for Your Candidates</h1>
+                <p>Please select one candidate for each position.</p>
+            </div>
+
+            <div id="authStatus"></div>
+        </div>
+
+        <div id="voteProfile" class="result-summary p-4 rounded-4 shadow-sm mb-4 bg-white"></div>
+
+        <div id="voteAlert" class="alert visually-hidden"></div>
+
+        <section id="positions"></section>
+
+    </main>
+
 </div>
 
 <script>
-  window.pageInit('vote');
+    window.pageInit('vote');
 </script>
+
+</body>
+</html>

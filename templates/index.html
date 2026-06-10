@@ -1,74 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JAGWA SPORTS | Voter Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'app.js' %}" defer></script>
+</head>
+<body>
+
 <div class="voter-layout">
-  <aside class="voter-sidebar">
-    <div class="brand-box">
-      <img src="/static/logo.png" alt="JAGWA SPORTS" class="brand-logo">
-      <h3>JAGWA<span>SPORTS</span></h3>
-    </div>
 
-    <nav class="voter-menu">
-      <a href="/" class="active">Dashboard</a>
-      <a href="/vote/">Vote</a>
-      <a href="/results/">My Votes</a>
-      <a href="/login/">My Profile</a>
-    </nav>
-
-    <div class="vote-note">
-      <strong>Your Vote Matters</strong>
-      <p>Your vote is secure and confidential.</p>
-    </div>
-  </aside>
-
-  <main class="voter-main">
-    <div class="voter-topbar">
-      <div>
-        <h1 id="dashboardWelcome">Welcome 👋</h1>
-        <p>You are logged in as a voter</p>
-      </div>
-
-      <div id="authStatus"></div>
-    </div>
-
-    <section class="vote-hero">
-      <div>
-        <h2>Ready to Vote?</h2>
-        <p>You can vote once for each position. Please make your choices carefully.</p>
-        <a href="/vote/" class="primary-action">Go to Voting Page</a>
-      </div>
-    </section>
-
-    <section class="progress-card">
-      <h3>Voting Progress</h3>
-      <div class="progress-content">
-        <div class="circle-progress">
-          <span id="progressPercent">0%</span>
-          <small>Completed</small>
+    <aside class="voter-sidebar">
+        <div class="brand-box">
+            <img src="{% static 'logo.png' %}" alt="JAGWA SPORTS" class="brand-logo">
+            <h3>JAGWA<span>SPORTS</span></h3>
         </div>
 
-        <div>
-          <h2 id="progressText">0 of 0</h2>
-          <p>Positions Voted</p>
-          <small id="progressMessage">You haven’t voted for any position yet.</small>
+        <nav class="voter-menu">
+            <a href="/" class="active">🏠 Dashboard</a>
+            <a href="/vote/">🗳️ Vote</a>
+            <a href="/results/">✅ My Votes</a>
+            <a href="/login/">👤 My Profile</a>
+            <a href="/login/">🚪 Logout</a>
+        </nav>
+
+        <div class="vote-note">
+            <strong>Your Vote Matters</strong>
+            <p>Your vote is secure, confidential, and counts towards a better future.</p>
         </div>
-      </div>
-    </section>
+    </aside>
 
-    <section class="dashboard-grid">
-      <div class="info-card">
-        <h3>How It Works</h3>
-        <p>1. Review positions</p>
-        <p>2. Select one candidate</p>
-        <p>3. Submit your vote</p>
-      </div>
+    <main class="voter-main">
 
-      <div class="info-card warning">
-        <h3>Important Notice</h3>
-        <p>Once you vote for a position, you cannot vote again for the same position.</p>
-      </div>
+        <div class="voter-topbar">
+            <div>
+                <h1 id="dashboardWelcome">Welcome 👋</h1>
+                <p>You are logged in as a voter</p>
+            </div>
 
-      <div class="info-card">
-        <h3>Need Help?</h3>
-        <p>If you face any issue, contact support or admin.</p>
-      </div>
-    </section>
-  </main>
+            <div id="authStatus"></div>
+        </div>
+
+        <section class="vote-hero">
+            <div>
+                <h2>Ready to Vote?</h2>
+                <p>
+                    You can vote once for each position. Please review all positions
+                    and make your choices carefully before submitting.
+                </p>
+                <a href="/vote/" class="primary-action">Go to Voting Page →</a>
+            </div>
+        </section>
+
+        <section class="progress-card">
+            <h3>Voting Progress</h3>
+
+            <div class="progress-content">
+                <div class="circle-progress" id="dashboardCircleProgress">
+                    <span id="progressPercent">0%</span>
+                    <small>Completed</small>
+                </div>
+
+                <div>
+                    <h2 id="progressText">0 of 0</h2>
+                    <p>Positions Voted</p>
+                    <small id="progressMessage">You haven’t voted for any position yet.</small>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-grid">
+            <div class="info-card">
+                <h3>How It Works</h3>
+                <p><strong>1. Review Positions</strong></p>
+                <p>Browse all positions and candidates carefully.</p>
+
+                <p><strong>2. Cast Your Vote</strong></p>
+                <p>Select one candidate for each position.</p>
+
+                <p><strong>3. One Vote Per Position</strong></p>
+                <p>You can only vote once for each position.</p>
+            </div>
+
+            <div class="info-card warning">
+                <h3>Important Notice</h3>
+                <p>
+                    Once you vote for a position, you cannot change or vote again
+                    for the same position.
+                </p>
+                <p>
+                    Make sure you are confident before submitting your vote.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>Need Help?</h3>
+                <p>
+                    If you face any issue while voting, contact the election admin
+                    or support team.
+                </p>
+                <a href="/vote/" class="secondary-action">Start Voting</a>
+            </div>
+        </section>
+
+    </main>
+
 </div>
+
+<script>
+    window.pageInit('home');
+</script>
+
+</body>
+</html>

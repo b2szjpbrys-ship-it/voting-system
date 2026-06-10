@@ -1,30 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JAGWA SPORTS | Vote Submitted</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'app.js' %}" defer></script>
+</head>
+<body>
+
 <div class="voter-layout">
-  <aside class="voter-sidebar">
-    <div class="brand-box">
-      <img src="/static/logo.png" alt="JAGWA SPORTS" class="brand-logo">
-      <h3>JAGWA<span>SPORTS</span></h3>
-    </div>
 
-    <nav class="voter-menu">
-      <a href="/">Dashboard</a>
-      <a href="/vote/">Vote</a>
-      <a href="/results/" class="active">My Votes</a>
-      <a href="/login/">My Profile</a>
-    </nav>
-  </aside>
+    <aside class="voter-sidebar">
+        <div class="brand-box">
+            <img src="{% static 'logo.png' %}" alt="JAGWA SPORTS" class="brand-logo">
+            <h3>JAGWA<span>SPORTS</span></h3>
+        </div>
 
-  <main class="voter-main">
-    <div class="success-box">
-      <div class="success-icon">✓</div>
-      <h1>Vote Submitted Successfully!</h1>
-      <p id="successNote">Thank you for participating in the election.</p>
+        <nav class="voter-menu">
+            <a href="/">🏠 Dashboard</a>
+            <a href="/vote/">🗳️ Vote</a>
+            <a href="/results/" class="active">✅ My Votes</a>
+            <a href="/login/">👤 My Profile</a>
+            <a href="/login/">🚪 Logout</a>
+        </nav>
 
-      <a href="/results/" class="primary-action">View My Votes</a>
-      <a href="/" class="secondary-action">Back to Dashboard</a>
-    </div>
-  </main>
+        <div class="vote-note">
+            <strong>Vote Submitted</strong>
+            <p>Thank you for participating in the election.</p>
+        </div>
+    </aside>
+
+    <main class="voter-main">
+
+        <div class="success-box">
+            <div class="success-icon">✓</div>
+
+            <h1>Vote Submitted Successfully!</h1>
+            <p id="successNote">Thank you for participating in the election.</p>
+
+            <a href="/results/" class="primary-action">View My Votes</a>
+            <a href="/" class="secondary-action">Back to Dashboard</a>
+        </div>
+
+    </main>
+
 </div>
 
 <script>
-  window.pageInit('success');
+    window.pageInit('success');
 </script>
+
+</body>
+</html>
