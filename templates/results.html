@@ -8,7 +8,97 @@
 
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <script src="{% static 'app.js' %}" defer></script>
+
+    <style>
+        body {
+            animation: pageFade 0.55s ease;
+        }
+
+        @keyframes pageFade {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .voter-sidebar {
+            animation: sidebarIn 0.6s ease;
+        }
+
+        @keyframes sidebarIn {
+            from {
+                opacity: 0;
+                transform: translateX(-35px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .voter-main {
+            animation: mainIn 0.65s ease;
+        }
+
+        @keyframes mainIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .print-my-votes {
+            margin-bottom: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .print-my-votes button {
+            border: none;
+            background: #007d87;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .print-my-votes button:hover {
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            .voter-sidebar,
+            .voter-topbar,
+            .print-my-votes,
+            #lastUpdated {
+                display: none !important;
+            }
+
+            .voter-layout {
+                display: block !important;
+            }
+
+            .voter-main {
+                padding: 0 !important;
+            }
+
+            body {
+                background: white !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
 <div class="voter-layout">
@@ -23,13 +113,12 @@
             <a href="/">🏠 Dashboard</a>
             <a href="/vote/">🗳️ Vote</a>
             <a href="/results/" class="active">✅ My Votes</a>
-            <a href="/login/">👤 My Profile</a>
             <a href="/login/">🚪 Logout</a>
         </nav>
 
         <div class="vote-note">
             <strong>Your Selected Votes</strong>
-            <p>This page shows only the candidates you selected.</p>
+            <p>You must vote for all positions before this page shows your selected candidates.</p>
         </div>
     </aside>
 
@@ -38,10 +127,15 @@
         <div class="voter-topbar">
             <div>
                 <h1>My Votes</h1>
-                <p>Here are the candidates you selected.</p>
+                <p>Here are the candidates you selected after completing all positions.</p>
             </div>
 
             <div id="authStatus"></div>
+        </div>
+
+        <div class="print-my-votes">
+            <button id="printMyVotes" type="button">Print My Votes</button>
+            <button id="downloadMyVotes" type="button">Download CSV</button>
         </div>
 
         <p id="lastUpdated" class="text-muted"></p>
@@ -54,7 +148,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        window.pageInit('results');
+        if (window.pageInit) {
+            window.pageInit('results');
+        }
     });
 </script>
 

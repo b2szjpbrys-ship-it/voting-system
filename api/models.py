@@ -1,8 +1,12 @@
 from django.db import models
 from django.utils import timezone
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 from datetime import timedelta
 import secrets
 import random
+import os
 
 
 class Voter(models.Model):
@@ -18,10 +22,8 @@ class Voter(models.Model):
 
     token = models.CharField(max_length=64, blank=True, null=True, unique=True)
 
-    # Lock user after completing voting
     login_locked_until = models.DateTimeField(blank=True, null=True)
 
-    # OTP fields for phone verification
     otp_code = models.CharField(max_length=6, blank=True, null=True)
     otp_expires_at = models.DateTimeField(blank=True, null=True)
     phone_verified = models.BooleanField(default=False)
@@ -97,6 +99,7 @@ class Candidate(models.Model):
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=255)
+
     position = models.ForeignKey(
         Position,
         related_name='candidates',
@@ -126,6 +129,48 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.position.name}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.image:
+            self.resize_image()
+
+    def resize_image(self):
+        try:
+            from PIL import Image
+            import os
+
+            img_path = self.image.path
+
+            if not os.path.exists(img_path):
+                return
+
+            img = Image.open(img_path)
+
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+
+            target_width = 500
+            target_height = 600
+
+            img_ratio = img.width / img.height
+            target_ratio = target_width / target_height
+
+            if img_ratio > target_ratio:
+                new_width = int(img.height * target_ratio)
+                left = (img.width - new_width) // 2
+                img = img.crop((left, 0, left + new_width, img.height))
+            else:
+                new_height = int(img.width / target_ratio)
+                top = (img.height - new_height) // 2
+                img = img.crop((0, top, img.width, top + new_height))
+
+            img = img.resize((target_width, target_height), Image.LANCZOS)
+            img.save(img_path, quality=85, optimize=True)
+
+        except Exception as e:
+            print("IMAGE RESIZE ERROR:", e)
 
 
 class Vote(models.Model):

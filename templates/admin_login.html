@@ -1,0 +1,203 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JAGWA SPORTS | Admin Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(240,20,30,0.22), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(0,166,179,0.25), transparent 34%),
+        linear-gradient(135deg, #05090d, #071117);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.5s ease;
+      padding: 20px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 430px;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 36px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+      text-align: center;
+      animation: boxPop 0.55s ease;
+    }
+
+    @keyframes boxPop {
+      from {
+        opacity: 0;
+        transform: scale(0.94);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .logo {
+      width: 92px;
+      height: 92px;
+      object-fit: contain;
+      border-radius: 18px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    p {
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 14px 16px;
+      outline: none;
+      margin-bottom: 14px;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #007d87;
+      box-shadow: 0 0 0 4px rgba(0,125,135,0.14);
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      background: linear-gradient(135deg, #f0141e, #b90f18);
+      color: white;
+      border-radius: 16px;
+      padding: 15px 18px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(240,20,30,0.25);
+    }
+
+    .alert {
+      display: none;
+      margin-top: 14px;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 13px;
+      border-radius: 14px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 18px;
+      color: #007d87;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-box">
+    <img src="{% static 'logo.png' %}" alt="JAGWA SPORTS" class="logo">
+
+    <h1>Admin Login</h1>
+    <p>Enter admin key to access JAGWA control panel.</p>
+
+    <input id="adminKey" type="password" placeholder="Enter admin key">
+    <button id="loginBtn" type="button">Open Admin Panel</button>
+
+    <div id="alert" class="alert"></div>
+
+    <a href="/login/" class="back-link">Back to Voter Login</a>
+  </div>
+
+  <script>
+    const API_BASE = "/api";
+
+    function showAlert(message) {
+      const box = document.getElementById("alert");
+      box.textContent = message;
+      box.style.display = "block";
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", async function () {
+      const key = document.getElementById("adminKey").value.trim();
+
+      if (!key) {
+        showAlert("Enter admin key.");
+        return;
+      }
+
+      try {
+        const response = await fetch(API_BASE + "/admin/candidates/?admin_key=" + encodeURIComponent(key), {
+          headers: {
+            "X-Admin-Key": key
+          }
+        });
+
+        if (!response.ok) {
+          showAlert("Invalid admin key.");
+          return;
+        }
+
+        sessionStorage.setItem("jagwaAdminKey", key);
+        window.location.href = "/jagwa-control/";
+
+      } catch (error) {
+        showAlert("Network error. Please try again.");
+      }
+    });
+
+    document.getElementById("adminKey").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        document.getElementById("loginBtn").click();
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -8,7 +8,91 @@
 
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <script src="{% static 'app.js' %}" defer></script>
+
+    <style>
+        body {
+            animation: pageFade 0.55s ease;
+        }
+
+        @keyframes pageFade {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .voter-sidebar {
+            animation: sidebarIn 0.6s ease;
+        }
+
+        @keyframes sidebarIn {
+            from {
+                opacity: 0;
+                transform: translateX(-35px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .voter-main {
+            animation: mainIn 0.65s ease;
+        }
+
+        @keyframes mainIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-logo {
+            width: 86px;
+            height: 86px;
+            object-fit: contain;
+            border-radius: 18px;
+        }
+
+        .candidate-photo {
+            width: 110px !important;
+            height: 130px !important;
+            min-width: 110px !important;
+            max-width: 110px !important;
+            object-fit: cover !important;
+            object-position: center !important;
+            border-radius: 14px !important;
+            background: #e5e7eb !important;
+        }
+
+        .candidate-card {
+            overflow: hidden !important;
+        }
+
+        .candidate-card img,
+        #positions img {
+            object-fit: cover !important;
+            object-position: center !important;
+        }
+
+        @media (max-width: 640px) {
+            .candidate-photo {
+                width: 100% !important;
+                height: 220px !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
 <div class="voter-layout">
@@ -23,7 +107,6 @@
             <a href="/">🏠 Dashboard</a>
             <a href="/vote/" class="active">🗳️ Vote</a>
             <a href="/results/">✅ My Votes</a>
-            <a href="/login/">👤 My Profile</a>
             <a href="/login/">🚪 Logout</a>
         </nav>
 
@@ -56,7 +139,24 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        window.pageInit('vote');
+        if (window.pageInit) {
+            window.pageInit('vote');
+        }
+
+        const observer = new MutationObserver(function () {
+            document.querySelectorAll('#positions img').forEach(function (img) {
+                img.classList.add('candidate-photo');
+            });
+
+            document.querySelectorAll('#positions .candidate-card').forEach(function (card) {
+                card.style.overflow = 'hidden';
+            });
+        });
+
+        observer.observe(document.getElementById('positions'), {
+            childList: true,
+            subtree: true
+        });
     });
 </script>
 

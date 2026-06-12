@@ -1,34 +1,319 @@
-{% extends 'base.html' %}
-{% block title %}Login — Voting App{% endblock %}
-{% block content %}
-<section class="container py-6">
-  <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <div class="login-card p-5 rounded-4 shadow-sm bg-white">
-        <h2 class="mb-3">Sign in to vote</h2>
-        <p class="text-muted">Enter your name and phone number to create your voter profile. After signing in, you will return to the home page.</p>
-        <div id="loginAlert" class="alert alert-danger visually-hidden"></div>
-        <form id="loginForm" class="mt-4">
-          <div class="mb-3">
-            <label class="form-label">Full name</label>
-            <input id="loginName" type="text" class="form-control" placeholder="Jane Doe" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Phone number</label>
-            <input id="loginPhone" type="tel" class="form-control" placeholder="+255712345678" required>
-            <div class="form-text">Phone must start with +255 and be a valid Tanzania number.</div>
-          </div>
-          <button class="btn btn-primary w-100">Continue</button>
-        </form>
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JAGWA SPORTS | Voter Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(0,166,179,0.25), transparent 28%),
+        linear-gradient(135deg, #05090d, #071117);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0f172a;
+      animation: fadeIn 0.55s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-shell {
+      width: 100%;
+      max-width: 1100px;
+      min-height: 620px;
+      display: grid;
+      grid-template-columns: 1fr 430px;
+      background: #ffffff;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+      margin: 20px;
+    }
+
+    .login-left {
+      background:
+        linear-gradient(135deg, rgba(0,125,135,0.94), rgba(5,9,13,0.96)),
+        radial-gradient(circle at bottom right, rgba(240,20,30,0.35), transparent 38%);
+      color: white;
+      padding: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      border-radius: 22px;
+      margin-bottom: 20px;
+      animation: logoPop 0.6s ease;
+    }
+
+    @keyframes logoPop {
+      from {
+        opacity: 0;
+        transform: scale(0.85);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .login-left h1 {
+      font-size: 42px;
+      line-height: 1.05;
+      margin: 0 0 18px;
+      font-weight: 900;
+    }
+
+    .login-left p {
+      color: rgba(255,255,255,0.78);
+      line-height: 1.8;
+      font-size: 16px;
+      max-width: 520px;
+    }
+
+    .login-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .login-badges span {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .login-right {
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-card h2 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .login-card p {
+      margin: 0 0 26px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #0f172a;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 14px 16px;
+      outline: none;
+      font-size: 15px;
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      border-color: #007d87;
+      box-shadow: 0 0 0 4px rgba(0,125,135,0.14);
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      background: linear-gradient(135deg, #f0141e, #b90f18);
+      color: white;
+      border-radius: 16px;
+      padding: 15px 18px;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 8px;
+      font-size: 15px;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(240,20,30,0.25);
+    }
+
+    .login-alert {
+      display: none;
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .login-help {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .login-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .login-left {
+        padding: 36px;
+      }
+
+      .login-right {
+        padding: 36px;
+      }
+
+      .login-left h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-shell">
+
+    <section class="login-left">
+      <div>
+        <img src="{% static 'logo.png' %}" alt="JAGWA SPORTS" class="brand-logo">
+
+        <h1>JAGWA SPORTS Voting System</h1>
+        <p>
+          Login using your name and Tanzania phone number to continue voting.
+          Each voter can vote once per position.
+        </p>
+
+        <div class="login-badges">
+          <span>Secure Voting</span>
+          <span>One Vote Per Position</span>
+          <span>Live Dashboard</span>
+        </div>
       </div>
-    </div>
+
+      <p>
+        Use phone format: <strong>+2557XXXXXXXX</strong> or <strong>+2556XXXXXXXX</strong>
+      </p>
+    </section>
+
+    <section class="login-right">
+      <div class="login-card">
+        <h2>Voter Login</h2>
+        <p>Enter your details to access the voting dashboard.</p>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input id="name" type="text" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="text" placeholder="+2557XXXXXXXX" required>
+          </div>
+
+          <button type="submit">Login and Continue</button>
+        </form>
+
+        <div id="loginAlert" class="login-alert"></div>
+
+        <div class="login-help">
+          If you have completed voting, the system may lock login for 5 minutes.
+        </div>
+      </div>
+    </section>
+
   </div>
-</section>
-{% endblock %}
-{% block page_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        window.pageInit('login');
+
+  <script>
+    const API = "/api/";
+
+    function showAlert(message) {
+      const alertBox = document.getElementById("loginAlert");
+      alertBox.textContent = message;
+      alertBox.style.display = "block";
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      if (!name || !phone) {
+        showAlert("Please enter name and phone number.");
+        return;
+      }
+
+      try {
+        const response = await fetch(API + "login/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: name,
+            phone: phone
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showAlert(data.detail || "Login failed.");
+          return;
+        }
+
+        localStorage.setItem("voterProfile", JSON.stringify(data));
+        window.location.href = "/";
+
+      } catch (error) {
+        showAlert("Network error. Please try again.");
+      }
     });
-</script>
-{% endblock %}
+  </script>
+</body>
+</html>

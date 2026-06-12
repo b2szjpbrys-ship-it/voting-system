@@ -11,13 +11,14 @@ urlpatterns = [
     path('login/', TemplateView.as_view(template_name='login.html'), name='login'),
     path('success/', TemplateView.as_view(template_name='success.html'), name='success'),
 
-    # Custom admin dashboard yako
-    path('admin-panel/', TemplateView.as_view(template_name='admin.html'), name='admin_panel'),
+    # Custom admin login and panel
+    path('jagwa-login/', TemplateView.as_view(template_name='admin_login.html'), name='admin_login'),
+    path('jagwa-control/', TemplateView.as_view(template_name='admin.html'), name='admin_panel'),
 
     # Django admin ya kawaida
     path('admin/', admin.site.urls),
 
-    # API routes
+    # API
     path('api/', include('api.urls')),
 ]
 

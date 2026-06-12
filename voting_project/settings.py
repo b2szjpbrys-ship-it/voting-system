@@ -9,7 +9,9 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret")
-DEBUG = os.getenv("DEBUG", "False") == "True"
+
+# LOCAL DEVELOPMENT
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "24bia057.pythonanywhere.com",
@@ -90,13 +92,17 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    }
+    },
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Kwa sasa local iwe rahisi. Admin page itatumia adminsecret.
 ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "adminsecret")
 
 REST_FRAMEWORK = {

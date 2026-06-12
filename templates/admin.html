@@ -1,51 +1,912 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <title>JAGWA SPORTS | Admin Control</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      color: #0f172a;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .admin-wrapper {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, #071117, #101820);
+      color: white;
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      animation: slideLeft 0.6s ease;
+      overflow-y: auto;
+    }
+
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .logo-box {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-box img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 10px;
+      border-radius: 16px;
+    }
+
+    .logo-box h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      color: white;
+    }
+
+    .logo-box span {
+      color: #f0141e;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav a {
+      color: rgba(255,255,255,0.82);
+      text-decoration: none;
+      padding: 13px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(0, 166, 179, 0.22);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px;
+      animation: fadeUp 0.6s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 20px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 900;
+    }
+
+    .topbar p {
+      color: #64748b;
+      margin: 6px 0 0;
+    }
+
+    .key-card {
+      background: white;
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.08);
+    }
+
+    .key-card label {
+      display: block;
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 13px 14px;
+      outline: none;
+      background: white;
+      color: #0f172a;
+    }
+
+    input:disabled {
+      background: #f1f5f9;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 13px 18px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-right: 6px;
+      margin-bottom: 8px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-main {
+      background: #007d87;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #b91c1c;
+      color: white;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .mini-card {
+      background: white;
+      padding: 22px;
+      border-radius: 20px;
+      box-shadow: 0 12px 28px rgba(15,23,42,0.07);
+      animation: pop 0.5s ease both;
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: scale(0.96) translateY(18px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .mini-card span {
+      display: block;
+      color: #64748b;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .mini-card strong {
+      font-size: 24px;
+      color: #007d87;
+    }
+
+    .section {
+      background: white;
+      padding: 24px;
+      border-radius: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 28px rgba(15,23,42,0.07);
+      animation: fadeUp 0.6s ease;
+    }
+
+    .section h2 {
+      margin: 0 0 5px;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .section p {
+      margin-top: 0;
+      color: #64748b;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .form-row input,
+    .form-row select {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      background: #f8fafc;
+      border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .candidate-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .candidate-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .candidate-left img,
+    .no-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .winner-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .winner-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid rgba(15,23,42,0.08);
+      break-inside: avoid;
+    }
+
+    .winner-card img,
+    .winner-placeholder {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 14px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .winner-card h3 {
+      margin: 5px 0;
+      color: #007d87;
+    }
+
+    .winner-card h4 {
+      margin: 5px 0 12px;
+    }
+
+    .winner-card span {
+      background: rgba(239,35,60,0.12);
+      color: #b91c1c;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 900;
+      display: inline-block;
+    }
+
+    .print-title {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .sidebar,
+      .topbar,
+      .cards,
+      #posForm,
+      #candidateForm,
+      #loadUsers,
+      #usersList,
+      #positionsList,
+      #candidatesList,
+      #getWinners,
+      #downloadResults,
+      #printResults,
+      #resetElection {
+        display: none !important;
+      }
+
+      .admin-wrapper {
+        display: block;
+      }
+
+      .main {
+        padding: 0;
+      }
+
+      .section {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+      }
+
+      .section h2,
+      .section p {
+        display: none;
+      }
+
+      .print-title {
+        display: block;
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .winner-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .admin-wrapper {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .cards,
+      .winner-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .candidate-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Admin Dashboard</h1>
+  <div class="admin-wrapper">
 
-    <label>Admin Key: <input id="adminKey" type="text" placeholder="adminsecret"></label>
+    <aside class="sidebar">
+      <div class="logo-box">
+        <img src="{% static 'logo.png' %}" alt="JAGWA SPORTS">
+        <h2>JAGWA <span>SPORTS</span></h2>
+      </div>
 
-    <section>
-      <h2>Positions</h2>
-      <form id="posForm">
-        <input id="positionName" placeholder="Position name">
-        <button type="submit">Add Position</button>
-      </form>
-      <ul id="positionsList"></ul>
-    </section>
+      <nav class="nav">
+        <a href="/jagwa-control/" class="active">📊 Dashboard</a>
+        <a href="/vote/">🗳️ Voting Page</a>
+        <a href="/results/">✅ Results Page</a>
+        <a href="#" id="adminLogout">🚪 Logout</a>
+      </nav>
+    </aside>
 
-    <section>
-      <h2>Candidates</h2>
-      <form id="candidateForm">
-        <input id="candidateName" placeholder="Candidate name">
-        <select id="candidatePosition"></select>
-        <input id="candidateImage" type="file" accept="image/*">
-        <button type="submit">Add Candidate</button>
-      </form>
-      <ul id="candidatesList"></ul>
-    </section>
+    <main class="main">
 
-    <section>
-      <h2>Users</h2>
-      <button id="loadUsers">Load users</button>
-      <ul id="usersList"></ul>
-    </section>
+      <header class="topbar">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Manage positions, candidates, users and election results.</p>
+        </div>
 
-    <section>
-      <h2>Actions</h2>
-      <button id="getWinners">Show Winners</button>
-      <pre id="winners"></pre>
-      <button id="resetElection">Reset Election</button>
-    </section>
+        <div class="key-card">
+          <label>Admin Key</label>
+          <input id="adminKey" type="password" placeholder="Admin session active" disabled>
+        </div>
+      </header>
 
+      <section class="cards">
+        <div class="mini-card">
+          <span>Positions</span>
+          <strong id="positionCount">0</strong>
+        </div>
+        <div class="mini-card">
+          <span>Candidates</span>
+          <strong id="candidateCount">0</strong>
+        </div>
+        <div class="mini-card">
+          <span>Users</span>
+          <strong id="userCount">0</strong>
+        </div>
+        <div class="mini-card">
+          <span>System</span>
+          <strong>Live</strong>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Positions</h2>
+        <p>Add and view election positions.</p>
+
+        <form id="posForm" class="form-row">
+          <input id="positionName" placeholder="Position name e.g. Mwenyekiti">
+          <button class="btn-main" type="submit">Add Position</button>
+        </form>
+
+        <ul id="positionsList"></ul>
+      </section>
+
+      <section class="section">
+        <h2>Candidates</h2>
+        <p>Add candidate and upload photo.</p>
+
+        <form id="candidateForm" class="form-row">
+          <input id="candidateName" placeholder="Candidate name">
+          <select id="candidatePosition">
+            <option value="">Loading positions...</option>
+          </select>
+          <input id="candidateImage" type="file" accept="image/*">
+          <button class="btn-main" type="submit">Add Candidate</button>
+        </form>
+
+        <ul id="candidatesList"></ul>
+      </section>
+
+      <section class="section">
+        <h2>Users</h2>
+        <p>View voters and voting status.</p>
+
+        <button id="loadUsers" class="btn-main" type="button">Load Users</button>
+        <br><br>
+        <ul id="usersList"></ul>
+      </section>
+
+      <section class="section">
+        <h2>Actions</h2>
+        <p>Show winners, download results, print results or reset election.</p>
+
+        <button id="getWinners" class="btn-main" type="button">Show Winners</button>
+        <button id="downloadResults" class="btn-main" type="button">Download CSV</button>
+        <button id="printResults" class="btn-main" type="button">Print Results</button>
+        <button id="resetElection" class="btn-danger" type="button">Reset Election</button>
+
+        <div id="printArea">
+          <div id="winners" class="winner-grid"></div>
+        </div>
+      </section>
+
+    </main>
   </div>
-  <script src="/static/admin.js"></script>
+
+  <script>
+    const API_BASE = "/api";
+
+    if (!sessionStorage.getItem("jagwaAdminKey")) {
+      window.location.href = "/jagwa-login/";
+    }
+
+    function getAdminKey() {
+      const storedKey = sessionStorage.getItem("jagwaAdminKey");
+
+      if (!storedKey) {
+        window.location.href = "/jagwa-login/";
+        return "";
+      }
+
+      return storedKey;
+    }
+
+    async function apiFetch(path, options = {}) {
+      const key = getAdminKey();
+
+      options.headers = options.headers || {};
+      options.headers["X-Admin-Key"] = key;
+
+      const separator = path.includes("?") ? "&" : "?";
+      const url = API_BASE + path + separator + "admin_key=" + encodeURIComponent(key);
+
+      const response = await fetch(url, options);
+      const text = await response.text();
+
+      let data;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch (e) {
+        data = text;
+      }
+
+      if (!response.ok) {
+        console.error(data);
+        throw new Error(typeof data === "string" ? data : data.detail || data.message || "Request failed");
+      }
+
+      return data;
+    }
+
+    function safe(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function loadPositions() {
+      try {
+        const data = await apiFetch("/positions/");
+        const list = document.getElementById("positionsList");
+        const select = document.getElementById("candidatePosition");
+
+        list.innerHTML = "";
+        select.innerHTML = "";
+
+        document.getElementById("positionCount").textContent = Array.isArray(data) ? data.length : 0;
+
+        if (!Array.isArray(data) || data.length === 0) {
+          list.innerHTML = "<li>No positions found</li>";
+          select.innerHTML = "<option value=''>No positions</option>";
+          return;
+        }
+
+        data.forEach(pos => {
+          const li = document.createElement("li");
+          li.textContent = `${pos.name} (ID: ${pos.id})`;
+          list.appendChild(li);
+
+          const option = document.createElement("option");
+          option.value = pos.id;
+          option.textContent = pos.name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function loadCandidates() {
+      try {
+        const data = await apiFetch("/admin/candidates/");
+        const list = document.getElementById("candidatesList");
+
+        list.innerHTML = "";
+
+        document.getElementById("candidateCount").textContent = Array.isArray(data) ? data.length : 0;
+
+        if (!Array.isArray(data) || data.length === 0) {
+          list.innerHTML = "<li>No candidates found</li>";
+          return;
+        }
+
+        data.forEach(c => {
+          const li = document.createElement("li");
+
+          const image = c.image_url
+            ? `<img src="${safe(c.image_url)}" alt="${safe(c.name)}">`
+            : `<div class="no-image">No Image</div>`;
+
+          li.innerHTML = `
+            <div class="candidate-item">
+              <div class="candidate-left">
+                ${image}
+                <div>
+                  <strong>${safe(c.name)}</strong><br>
+                  <small>${safe(c.position_name || "")}</small><br>
+                  <small>ID: ${c.id} | Votes: ${c.votes_count || 0}</small>
+                </div>
+              </div>
+
+              <button class="btn-main upload-btn" type="button" data-id="${c.id}">Upload Image</button>
+            </div>
+          `;
+
+          list.appendChild(li);
+        });
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function loadUsers() {
+      try {
+        const data = await apiFetch("/admin/users/");
+        const list = document.getElementById("usersList");
+
+        list.innerHTML = "";
+
+        document.getElementById("userCount").textContent = Array.isArray(data) ? data.length : 0;
+
+        if (!Array.isArray(data) || data.length === 0) {
+          list.innerHTML = "<li>No users found</li>";
+          return;
+        }
+
+        data.forEach(u => {
+          const li = document.createElement("li");
+          li.textContent = `${u.name} (${u.phone}) - voted: ${u.has_voted}`;
+          list.appendChild(li);
+        });
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function uploadImage(candidateId, file) {
+      const form = new FormData();
+      form.append("candidate_id", candidateId);
+      form.append("image", file);
+
+      await apiFetch("/admin/upload-image/", {
+        method: "POST",
+        body: form
+      });
+    }
+
+    document.getElementById("posForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("positionName").value.trim();
+
+      if (!name) {
+        alert("Enter position name");
+        return;
+      }
+
+      try {
+        await apiFetch("/admin/positions/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: name, description: "" })
+        });
+
+        document.getElementById("positionName").value = "";
+        await loadPositions();
+        alert("Position added");
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById("candidateForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("candidateName").value.trim();
+      const positionId = document.getElementById("candidatePosition").value;
+      const file = document.getElementById("candidateImage").files[0];
+
+      if (!name || !positionId) {
+        alert("Enter candidate name and select position");
+        return;
+      }
+
+      try {
+        const candidate = await apiFetch("/admin/candidates/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name,
+            position_id: positionId,
+            description: "",
+            image_url: ""
+          })
+        });
+
+        if (file && candidate && candidate.id) {
+          await uploadImage(candidate.id, file);
+        }
+
+        document.getElementById("candidateName").value = "";
+        document.getElementById("candidateImage").value = "";
+
+        await loadCandidates();
+        alert("Candidate added");
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById("candidatesList").addEventListener("click", function (e) {
+      if (!e.target.classList.contains("upload-btn")) return;
+
+      const candidateId = e.target.dataset.id;
+
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+
+      input.addEventListener("change", async function () {
+        const file = input.files[0];
+        if (!file) return;
+
+        try {
+          await uploadImage(candidateId, file);
+          await loadCandidates();
+          alert("Image uploaded");
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+
+      input.click();
+    });
+
+    document.getElementById("adminLogout").addEventListener("click", function (e) {
+      e.preventDefault();
+      sessionStorage.removeItem("jagwaAdminKey");
+      window.location.href = "/jagwa-login/";
+    });
+
+    document.getElementById("loadUsers").addEventListener("click", loadUsers);
+
+    let latestWinners = [];
+
+    document.getElementById("getWinners").addEventListener("click", async function () {
+      try {
+        const data = await apiFetch("/admin/winners/");
+        latestWinners = Array.isArray(data) ? data : [];
+        renderWinners(latestWinners);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    function renderWinners(data) {
+      const box = document.getElementById("winners");
+      box.innerHTML = "";
+
+      if (!Array.isArray(data) || data.length === 0) {
+        box.innerHTML = "<p>No winners found</p>";
+        return;
+      }
+
+      const title = document.createElement("div");
+      title.className = "print-title";
+      title.innerHTML = `
+        <h1>JAGWA SPORTS Election Results</h1>
+        <p>Printed on ${new Date().toLocaleString()}</p>
+      `;
+      box.appendChild(title);
+
+      data.forEach(w => {
+        const card = document.createElement("div");
+        card.className = "winner-card";
+
+        const image = w.image_url
+          ? `<img src="${safe(w.image_url)}" alt="${safe(w.candidate)}">`
+          : `<div class="winner-placeholder">No Image</div>`;
+
+        card.innerHTML = `
+          ${image}
+          <small>Position</small>
+          <h3>${safe(w.position)}</h3>
+          <small>Winner / Leading Candidate</small>
+          <h4>${safe(w.candidate)}</h4>
+          <span>${w.votes || 0} votes</span>
+        `;
+
+        box.appendChild(card);
+      });
+    }
+
+    document.getElementById("downloadResults").addEventListener("click", async function () {
+      try {
+        if (!latestWinners || latestWinners.length === 0) {
+          const data = await apiFetch("/admin/winners/");
+          latestWinners = Array.isArray(data) ? data : [];
+        }
+
+        if (latestWinners.length === 0) {
+          alert("No results to download");
+          return;
+        }
+
+        let csv = "Position,Candidate,Votes\n";
+
+        latestWinners.forEach(w => {
+          const position = String(w.position || "").replaceAll('"', '""');
+          const candidate = String(w.candidate || "").replaceAll('"', '""');
+          const votes = w.votes || 0;
+
+          csv += `"${position}","${candidate}","${votes}"\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "jagwa-election-results.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById("printResults").addEventListener("click", async function () {
+      try {
+        if (!latestWinners || latestWinners.length === 0) {
+          const data = await apiFetch("/admin/winners/");
+          latestWinners = Array.isArray(data) ? data : [];
+          renderWinners(latestWinners);
+        }
+
+        if (latestWinners.length === 0) {
+          alert("No results to print");
+          return;
+        }
+
+        window.print();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    document.getElementById("resetElection").addEventListener("click", async function () {
+      if (!confirm("Reset election? This will delete all votes.")) return;
+
+      try {
+        const data = await apiFetch("/admin/reset/", { method: "POST" });
+        alert(data.detail || data.message || "Election reset successfully");
+        await loadCandidates();
+        await loadUsers();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    loadPositions();
+    loadCandidates();
+  </script>
 </body>
 </html>
